@@ -1,103 +1,105 @@
---[[
-#
-#ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-#:((
-# For More Information ....! 
-# Developer : reza < @Yagop > 
-# our channel: @Ntflight
-# Version: 1.1
-#:))
-#ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-#
-]]
-do
-function run_bash(str)
-    local cmd = io.popen(str)
-    local result = cmd:read('*all')
-    return result
-end
-local api_key = nil
-local base_api = "https://maps.googleapis.com/maps/api"
-function get_latlong(area)
-  local api      = base_api .. "/geocode/json?"
-  local parameters = "address=".. (URL.escape(area) or "")
-  if api_key ~= nil then
-    parameters = parameters .. "&key="..api_key
-  end
-  local res, code = https.request(api..parameters)
-  if code ~=200 then return nil  end
-  local data = json:decode(res)
- 
-  if (data.status == "ZERO_RESULTS") then
-    return nil
-  end
-  if (data.status == "OK") then
-    lat  = data.results[1].geometry.location.lat
-    lng  = data.results[1].geometry.location.lng
-    acc  = data.results[1].geometry.location_type
-    types= data.results[1].types
-    return lat,lng,acc,types
-  end
-end
-function get_staticmap(area)
-  local api        = base_api .. "/staticmap?"
-  local lat,lng,acc,types = get_latlong(area)
+Date : 12/27/2016 
+Group ID : 1058774296
+Group Name : Music & Love ( kohyar )
+Expire : 60 Days
+------------------------------------------------
+Date : 12/26/2016 
+Group ID : 1074661569
+Group Name : موزیکال (@ariamusicall)
+Expire : 30 Days
+------------------------------------------------
+Date : 12/26/2016 
+Group ID : 1030697864
+Group Name : موسیقی (@Anshan1478)
+Expire : 30 Days
+------------------------------------------------
+Date : 12/26/2016 
+Group ID : 1030697864
+Group Name : موسیقی (@Anshan1478)
+Expire : 30 Days
+------------------------------------------------
+Date : 12/27/2016 
+Group ID : 1056532108
+Group Name : House Music (@ebimp)
+Expire : 78 Days
+------------------------------------------------
+Date : 12/27/2016 
+Group ID :1016328337
+Group Name : مشکلات رسیور و ماهواره (اصلی) (@Rh1346)
+Expire : 126 Days
+------------------------------------------------
+Date : 12/27/2016 
+Group Name : ((گروه نصابان ماهر)) (@Rh1346)
+Group ID : 1053381096
+Expire : 126 Days
+------------------------------------------------
+Date : 12/27/2016 
+Group ID : 1056271826
+Group Name : حامیان توسعه گرگان (@Mohamadalazmani)
+Expire : 77 Days
+------------------------------------------------
+ دنیای ترانه : Waiting ...
+------------------------------------------------
+بچهای شیطون  : Waiting ...
+------------------------------------------------
+playموزیک : Waiting ...
+------------------------------------------------
+چت ممنوع : Waiting ...
+------------------------------------------------
+Date : 12/27/2016 
+Group ID : 1060545620
+Group Name : Dream Land ( kohyar )
+Expire : 10 Days
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
+Date : 
+Group ID : 
+Group Name : 
+Expire : 
+------------------------------------------------
 
-  local scale = types[1]
-  if     scale=="locality" then zoom=8
-  elseif scale=="country"  then zoom=4
-  else zoom = 13 end
-    
-  local parameters =
-    "size=600x300" ..
-    "&zoom="  .. zoom ..
-    "&center=" .. URL.escape(area) ..
-    "&markers=color:red"..URL.escape("|"..area)
-
-  if api_key ~=nil and api_key ~= "" then
-    parameters = parameters .. "&key="..api_key
-  end
-  return lat, lng, api..parameters
-end
-
-
-function yagop(msg, matches)
-	local hash = 'usecommands:'..msg.from.id..':'..msg.to.id
-	redis:incr(hash)
-	local receiver	= get_receiver(msg)
-	local city = matches[1]
-	if matches[1] == 'azan' then
-	city = 'Baghdad'
-	end
-	local lat,lng,url	= get_staticmap(city)
-
-	local dumptime = run_bash('date +%s')
-	local code = http.request('http://api.aladhan.com/timings/'..dumptime..'?latitude='..lat..'&longitude='..lng..'&timezonestring=Asia/Baghdad&method=7')
-	local jdat = json:decode(code)
-	local data = jdat.data.timings
-	local text = '⛪️مدينة : '..city
-	  text = text..'\n🕌آذان الصبح: '..data.Fajr
-	  text = text..'\n🕌شروق الشمس: '..data.Sunrise
-	  text = text..'\n🕌آذان الظهر: '..data.Dhuhr
-	  text = text..'\n🕌الغروب: '..data.Sunset
-	  text = text..'\n🕌آذان المغرب: '..data.Maghrib
-	  text = text..'\n🕌آذان العشاء : '..data.Isha
-	  text = text..'\n\nchannel : @Ntflight'
-	if string.match(text, '0') then text = string.gsub(text, '0', '0') end
-	if string.match(text, '1') then text = string.gsub(text, '1', '1') end
-	if string.match(text, '2') then text = string.gsub(text, '2', '2') end
-	if string.match(text, '3') then text = string.gsub(text, '3', '3') end
-	if string.match(text, '4') then text = string.gsub(text, '4', '4') end
-	if string.match(text, '5') then text = string.gsub(text, '5', '5') end 
-	if string.match(text, '6') then text = string.gsub(text, '6', '6') end
-	if string.match(text, '7') then text = string.gsub(text, '7', '7') end
-	if string.match(text, '8') then text = string.gsub(text, '8', '8') end
-	if string.match(text, '9') then text = string.gsub(text, '9', '9') end
-	return text
-end
-
-return {
-    patterns = {"^[/!]azan (.*)$","^[/!](azan)$"},   
-
-    run =yagop }
-end
+<i>PowerFul Cli Anti-Link & Anti-Spam Bot</i>\n—------------------------\n— PowerTG V.1 —\n—------------------------\n Always <b>Online</b> \nYour Group <code>Protector</code> \n—----------------------------------------------\n*You Can Even <b>Test</b> The Bot Before You Buy Packages If You Want*\n—----------------------------------------------\n<code>To See Packages & Prices Use This Command</code> : #plist\n—----------------------------------------------\nContact One Of This <b>Users</b> To Buy Packages :\n1 . @PowerSudo <Dev>\n2 . @GnuLinuxGeek <Dev>\n<b><PowerTM-Channel></b>:Power-TM
